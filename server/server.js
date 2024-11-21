@@ -1,7 +1,9 @@
 const express=require("express");
-const connectDb=require("./config/dbConnection.js");
 const cors=require("cors");
 const dotenv=require("dotenv").config();
+
+//imports
+const connectDb=require("./config/dbConnection.js");
 
 connectDb();
 const app=express();
@@ -13,6 +15,10 @@ app.use(cors());
 app.get('/', (req, res) => {
     res.send("Working");
 });
+
+
+//routes
+app.use('/api/users',require('./routers/userRouter.js'));
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
