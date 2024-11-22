@@ -17,8 +17,10 @@ app.get('/', (req, res) => {
 });
 
 
+
 //routes
 app.use('/api/users',require('./routers/userRouter.js'));
+app.use('/api/doctors',require('./routers/doctorRouter.js'));
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
