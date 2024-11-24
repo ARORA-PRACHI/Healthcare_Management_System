@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: #f0f8ff; /* Light blue background color */
+            font-family: Arial, sans-serif; /* Optional: Set a clean font */
+            color: #333; /* Text color for better contrast */
+        }
+        h1 {
+            text-align: center;
+            color: #0056b3; /* Dark blue color for the heading */
+        }
+        p {
+            margin: 10px 0;
+            padding: 10px;
+            border: 10px solid #141212;
+            background-color: #e07cc9; 
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>MY HOME</h1>
+    {{#each data}}
+      <p>Name: {{this.name}}, Age: {{this.age}}</p>
+    {{/each}}
+</body>
+</html>
