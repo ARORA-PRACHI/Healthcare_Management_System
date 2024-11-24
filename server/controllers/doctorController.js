@@ -1,12 +1,13 @@
 const asyncHandler = require("express-async-handler");
 const Doctor = require("../models/doctorModel");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 // Register Doctor
 const registerDoctor = asyncHandler(async (req, res) => {
   const { name, email, speciality, phoneNumber, experience, address, password } = req.body;
 
-  // Check for missing fields
   if (!name || !email || !speciality || !phoneNumber || !experience || !address || !password) {
     res.status(400);
     throw new Error("Please fill in all fields");
@@ -18,6 +19,10 @@ const registerDoctor = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Doctor already exists" });
   }
 
+  // Hash the password before saving
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
   // Create a new doctor
   const doctor = new Doctor({
     name,
@@ -26,7 +31,7 @@ const registerDoctor = asyncHandler(async (req, res) => {
     phoneNumber,
     experience,
     address,
-    password 
+    password: hashedPassword, 
   });
 
   // Save the new doctor
@@ -46,7 +51,7 @@ const registerDoctor = asyncHandler(async (req, res) => {
       },
     });
   } else {
-    res.status(500); // Internal server error
+    res.status(500); 
     throw new Error("Failed to register doctor");
   }
 });
@@ -60,16 +65,26 @@ const loginDoctor = asyncHandler(async (req, res) => {
     throw new Error("Please provide both email and password");
   }
 
+  // Find doctor by email
   const doctor = await Doctor.findOne({ email });
-
   if (!doctor) {
     return res.status(401).json({ message: "Invalid credentials" });
   }
 
-  if (doctor.password !== password) {
+  // Compare the provided password with the stored hashed password
+  const passwordMatch = await bcrypt.compare(password, doctor.password);
+  if (!passwordMatch) {
     return res.status(401).json({ message: "Invalid credentials" });
   }
 
+  // Generate JWT token
+  const token = jwt.sign(
+    { id: doctor._id, name: doctor.name, email: doctor.email }, // Payload
+    process.env.JWT_SECRET, // Secret key
+    { expiresIn: "1h" } // Token expiration time
+  );
+
+  // Send response with doctor data and token
   res.status(200).json({
     message: "Login successful",
     doctor: {
@@ -81,6 +96,7 @@ const loginDoctor = asyncHandler(async (req, res) => {
       experience: doctor.experience,
       address: doctor.address,
     },
+    token, 
   });
 });
 
