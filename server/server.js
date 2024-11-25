@@ -124,6 +124,7 @@ app.use('/api/users', userRouter);
 // Routes for doctors
 app.use('/api/doctors', doctorRouter);
 
+app.use("/api/newsletter", require("./routers/newsletterRouter.js"));
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
