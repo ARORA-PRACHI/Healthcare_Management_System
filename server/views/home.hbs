@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
 </head>
-
 <body>
     {{> header}}
     <h1>This is home page</h1>
@@ -17,10 +16,11 @@
     </ul>
     <div>
         <form action="/profile" method="post" enctype="multipart/form-data">
-            <input type="file" name="avatar" multiple>
-            <input type="submit" value="upload">
+            <input type="file" name="avatar">
+            <input type="submit" value="Upload">
         </form>
     </div>
+
     {{#if imageUrls}}
     <div>
         <h2>Your Uploaded Images</h2>
@@ -28,8 +28,6 @@
             <img src="{{this}}" alt="Uploaded Avatar" style="max-width: 200px; margin: 10px;">
         {{/each}}
     </div>
-{{/if}}
+    {{/if}}
 </body>
-
 </html>
-
